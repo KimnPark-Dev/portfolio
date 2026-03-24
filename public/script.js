@@ -1,9 +1,3 @@
-/* ── Splash Screen ─────────────────────────────────── */
-window.addEventListener('load', () => {
-  const splash = document.getElementById('splash');
-  setTimeout(() => splash.classList.add('hide'), 1200);
-});
-
 /* ── Navbar scroll ────────────────────────────────── */
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
