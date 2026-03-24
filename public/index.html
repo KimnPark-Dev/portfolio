@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kim & Park — We Build Things</title>
+  <meta name="description" content="김OO & 박도현 — 함께 만들고, 함께 배우고, 함께 성장하는 개발 듀오" />
+  <meta property="og:title" content="Kim & Park — We Build Things" />
+  <meta property="og:description" content="두 개발자가 함께 만드는 프로젝트들" />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── SPLASH SCREEN ──────────────────────────────── -->
+  <div id="splash">
+    <img src="icon.png" alt="K&P" id="splash-icon" />
+  </div>
+
+  <!-- ── NAV ─────────────────────────────────────────── -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-k">K</span><span class="logo-amp">&</span><span class="logo-p">P</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="https://github.com/KimnPark-Dev" target="_blank" rel="noopener" class="nav-github">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>KimnPark-Dev</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="메뉴">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+      <a href="https://github.com/KimnPark-Dev" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ────────────────────────────────────────── -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>함께 만들고 있습니다</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="hero-k">Kim</span>
+        <span class="hero-amp">&</span>
+        <span class="hero-p">Park</span>
+      </h1>
+      <p class="hero-sub">We build things together.</p>
+      <p class="hero-desc">
+        두 개발자가 아이디어를 코드로 만드는 공간.<br />
+        Chrome Extension · Backend · Cloud · AI
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          프로젝트 보기
+        </a>
+        <a href="https://github.com/KimnPark-Dev" target="_blank" rel="noopener" class="btn btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ───────────────────────────────────────── -->
+  <section id="about">
+    <div class="container">
+      <div class="section-label">Who we are</div>
+      <h2 class="section-title">두 개발자,<br /><span class="accent">한 팀</span></h2>
+      <p class="section-desc">
+        같은 기수, 같은 목표. 아이디어가 생기면 바로 코드로 옮기는 듀오입니다.
+      </p>
+
+      <div class="members-grid">
+
+        <!-- Kim -->
+        <div class="member-card reveal">
+          <div class="member-card-top">
+            <div class="member-avatar kim"><span>K</span></div>
+            <a href="https://github.com/insongK" target="_blank" rel="noopener" class="member-gh-link kim-link">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              insongK
+            </a>
+          </div>
+          <div class="member-info">
+            <div class="member-role-badge">Security &amp; Dev</div>
+            <h3 class="member-name">INSONG Kim</h3>
+            <p class="member-desc">
+              네트워크 보안부터 Chrome Extension까지 폭넓게 다룹니다.
+              ARP Spoofing, pcap 분석, CNN 모델 구현 경험을 바탕으로
+              시스템 레벨부터 응용 레이어까지 설계합니다.
+            </p>
+            <div class="member-tags">
+              <span class="mtag">JavaScript</span>
+              <span class="mtag">C / C++</span>
+              <span class="mtag">Network Security</span>
+              <span class="mtag">AI / CNN</span>
+              <span class="mtag">Java</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Park -->
+        <div class="member-card reveal" style="transition-delay:.12s">
+          <div class="member-card-top">
+            <div class="member-avatar park"><span>P</span></div>
+            <a href="https://github.com/0206pdh" target="_blank" rel="noopener" class="member-gh-link park-link">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              0206pdh
+            </a>
+          </div>
+          <div class="member-info">
+            <div class="member-role-badge backend">Backend &amp; Cloud</div>
+            <h3 class="member-name">DOHYUN PARK</h3>
+            <p class="member-desc">
+              클라우드 네이티브 백엔드와 AI 파이프라인을 설계합니다.
+              AWS Serverless, FastAPI 기반 서비스 구축과 LLM 활용
+              시스템 개발에 집중합니다.
+            </p>
+            <div class="member-tags">
+              <span class="mtag">Python</span>
+              <span class="mtag">FastAPI</span>
+              <span class="mtag">AWS</span>
+              <span class="mtag">LLM</span>
+              <span class="mtag">Serverless</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 공통 스택 -->
+      <div class="shared-stack reveal">
+        <p class="shared-label">공통으로 다루는 것들</p>
+        <div class="badge-cloud">
+          <span class="badge">JavaScript</span>
+          <span class="badge">Python</span>
+          <span class="badge">Java</span>
+          <span class="badge">Git / GitHub</span>
+          <span class="badge">Chrome Extension</span>
+          <span class="badge">REST API</span>
+          <span class="badge">AWS</span>
+          <span class="badge">Docker</span>
+          <span class="badge">Node.js</span>
+          <span class="badge">SQL</span>
+          <span class="badge">Algorithm</span>
+          <span class="badge">BOJ</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS ────────────────────────────────────── -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-label">What we've built</div>
+      <h2 class="section-title">Projects</h2>
+      <p class="section-desc">
+        아이디어에서 배포까지 — 함께 만든 것들
+      </p>
+
+      <div class="projects-list">
+
+        <!-- Project 01 — AlgoNotion (진행중) -->
+        <article class="project-item reveal" data-index="0">
+          <div class="project-number">01</div>
+          <div class="project-body">
+            <div class="project-top">
+              <div class="project-meta">
+                <span class="project-status active">
+                  <span class="status-dot"></span>
+                  진행중
+                </span>
+                <span class="project-date">2026.03 —</span>
+              </div>
+              <div class="project-ext-links">
+                <a href="https://github.com/AutoSseug/Extention" target="_blank" rel="noopener" class="ext-link">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  Extension
+                </a>
+                <a href="https://github.com/AutoSseug/AlgoNotion" target="_blank" rel="noopener" class="ext-link">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  Backend
+                </a>
+              </div>
+            </div>
+            <h3 class="project-title">AlgoNotion</h3>
+            <p class="project-subtitle">BOJ 맞았습니다 → Notion 자동 저장</p>
+            <p class="project-desc-text">
+              백준(BOJ)에서 문제가 통과되는 순간, Chrome Extension이 자동으로
+              코드와 메타데이터를 수집해 Notion 데이터베이스에 저장합니다.
+              solved.ac API로 난이도 티어까지 함께 기록됩니다.
+            </p>
+            <div class="project-detail-grid">
+              <div class="detail-item">
+                <span class="detail-label">Extension</span>
+                <span class="detail-val">Content Script · Service Worker · Manifest V3</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Integration</span>
+                <span class="detail-val">Notion API · solved.ac API · BOJ</span>
+              </div>
+            </div>
+            <div class="project-stack-row">
+              <span class="tag">JavaScript</span>
+              <span class="tag">Chrome Extension</span>
+              <span class="tag">Notion API</span>
+              <span class="tag">solved.ac</span>
+              <span class="tag">Manifest V3</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Placeholder — 다음 프로젝트 -->
+        <article class="project-item project-upcoming reveal" data-index="1">
+          <div class="project-number muted">02</div>
+          <div class="project-body">
+            <div class="project-top">
+              <span class="project-status upcoming">
+                <span class="status-dot"></span>
+                Coming soon
+              </span>
+            </div>
+            <h3 class="project-title muted">Next Project</h3>
+            <p class="project-subtitle muted">만들고 있는 중...</p>
+            <p class="project-desc-text muted">
+              다음 프로젝트를 계획 중입니다.
+              아이디어가 구체화되면 여기에 추가됩니다.
+            </p>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="projects-more reveal">
+        <a href="https://github.com/KimnPark-Dev" target="_blank" rel="noopener" class="more-link">
+          더 많은 프로젝트는 GitHub에서
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ─────────────────────────────────────── -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-label">Say hello</div>
+      <h2 class="section-title">Contact</h2>
+      <p class="section-desc">
+        협업 제안, 피드백, 아니면 그냥 안녕도 환영합니다
+      </p>
+
+      <div class="contact-wrap">
+        <div class="contact-info">
+          <a href="https://github.com/KimnPark-Dev" target="_blank" rel="noopener" class="contact-item reveal">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </div>
+            <div>
+              <p class="contact-label">GitHub — Team</p>
+              <p class="contact-value">github.com/KimnPark-Dev</p>
+            </div>
+            <svg class="contact-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+          <a href="https://github.com/insongK" target="_blank" rel="noopener" class="contact-item reveal" style="transition-delay:.06s">
+            <div class="contact-icon" style="background:rgba(192,132,252,.1);color:var(--k)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </div>
+            <div>
+              <p class="contact-label">GitHub — INSONG Kim</p>
+              <p class="contact-value">github.com/insongK</p>
+            </div>
+            <svg class="contact-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+          <a href="https://github.com/0206pdh" target="_blank" rel="noopener" class="contact-item reveal" style="transition-delay:.12s">
+            <div class="contact-icon" style="background:rgba(56,189,248,.1);color:var(--p)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </div>
+            <div>
+              <p class="contact-label">GitHub — DOHYUN PARK</p>
+              <p class="contact-value">github.com/0206pdh</p>
+            </div>
+            <svg class="contact-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+          <a href="mailto:0206pdh@naver.com" class="contact-item reveal" style="transition-delay:.18s">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <p class="contact-label">Email — DOHYUN PARK</p>
+              <p class="contact-value">0206pdh@naver.com</p>
+            </div>
+            <svg class="contact-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+        </div>
+
+        <form
+          id="contact-form"
+          action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+          method="POST"
+          class="contact-form reveal"
+          style="transition-delay:.16s"
+          novalidate
+        >
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cf-name">이름</label>
+              <input type="text" id="cf-name" name="name" placeholder="홍길동" required />
+            </div>
+            <div class="form-group">
+              <label for="cf-email">이메일</label>
+              <input type="email" id="cf-email" name="email" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cf-message">메시지</label>
+            <textarea id="cf-message" name="message" rows="5" placeholder="안녕하세요, ..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary form-submit" id="form-submit-btn">
+            <span class="btn-text">보내기</span>
+            <span class="btn-loading" hidden>전송 중...</span>
+          </button>
+          <p class="form-success" id="form-success" hidden>메시지가 전송됐습니다!</p>
+          <p class="form-error" id="form-error" hidden>전송 실패. 이메일로 직접 연락해주세요.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────────── -->
+  <footer>
+    <div class="container footer-inner">
+      <a href="#hero" class="footer-logo">
+        <span class="logo-k">K</span><span class="logo-amp">&</span><span class="logo-p">P</span>
+      </a>
+      <p class="footer-copy">© 2026 Kim & Park. Built together.</p>
+      <a href="https://github.com/KimnPark-Dev" target="_blank" rel="noopener" class="footer-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
