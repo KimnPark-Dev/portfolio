@@ -896,8 +896,8 @@ footer {
   visibility: hidden;
 }
 #splash-icon {
-  width: 120px;
-  height: 120px;
+  width: min(60vw, 60vh);
+  height: min(60vw, 60vh);
   object-fit: contain;
   border-radius: 24px;
   animation: splashPop .5s cubic-bezier(.34,1.56,.64,1) forwards;
