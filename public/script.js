@@ -134,94 +134,177 @@ form?.querySelectorAll('input, textarea').forEach(f =>
 );
 
 /* ══════════════════════════════════════════════════════
-   HERO CANVAS — dual-color particle system
-   Purple (Kim) + Cyan (Park)
+   HERO — Three.js 3D scene
+   Purple (Kim) + Cyan (Park) dual-color particles
+   + rotating wireframe geometry + mouse parallax
 ══════════════════════════════════════════════════════ */
 (function () {
-  const canvas = document.getElementById('hero-canvas');
-  const ctx    = canvas.getContext('2d');
-  const COLORS = ['#c084fc', '#38bdf8'];
-  const COUNT  = 55;
-  const DIST   = 120;
-  let W, H, pts, raf;
+  if (typeof THREE === 'undefined') return;
 
-  class Pt {
-    constructor() { this.reset(true); }
-    reset(init) {
-      this.x  = Math.random() * W;
-      this.y  = init ? Math.random() * H : H + 8;
-      this.vx = (Math.random() - .5) * .3;
-      this.vy = -(Math.random() * .35 + .1);
-      this.r  = Math.random() * 1.4 + .5;
-      this.a  = Math.random() * .45 + .2;
-      this.c  = COLORS[Math.random() < .5 ? 0 : 1];
-      this.life = 0;
-      this.max  = Math.random() * 350 + 180;
-    }
-    update() {
-      this.x += this.vx; this.y += this.vy; this.life++;
-      if (this.life > this.max || this.y < -8) this.reset(false);
-    }
-    draw() {
-      const fade = Math.min(1, this.life / 50, (this.max - this.life) / 50);
-      ctx.save();
-      ctx.globalAlpha = this.a * fade;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = this.c;
-      ctx.fill();
-      ctx.restore();
-    }
-  }
+  const canvas = document.getElementById('hero-canvas');
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(65, 1, 0.1, 100);
+  camera.position.z = 7;
 
   function resize() {
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
+    const w = canvas.offsetWidth;
+    const h = canvas.offsetHeight || window.innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
   }
 
-  function loop() {
-    ctx.clearRect(0, 0, W, H);
-    // connections
-    for (let i = 0; i < pts.length; i++) {
-      for (let j = i + 1; j < pts.length; j++) {
-        const dx = pts[i].x - pts[j].x;
-        const dy = pts[i].y - pts[j].y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < DIST) {
-          ctx.save();
-          ctx.globalAlpha = (1 - d / DIST) * .12;
-          ctx.strokeStyle = pts[i].c === pts[j].c ? pts[i].c : '#a78bfa';
-          ctx.lineWidth = .5;
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x, pts[i].y);
-          ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.stroke();
-          ctx.restore();
-        }
-      }
+  /* ── PARTICLES ─────────────────────────────────────── */
+  const COUNT = 280;
+  const pos   = new Float32Array(COUNT * 3);
+  const col   = new Float32Array(COUNT * 3);
+  const vel   = [];
+
+  const C_KIM  = new THREE.Color('#c084fc');
+  const C_PARK = new THREE.Color('#38bdf8');
+  const C_MIX  = new THREE.Color('#a78bfa');
+
+  for (let i = 0; i < COUNT; i++) {
+    const i3 = i * 3;
+    pos[i3]     = (Math.random() - 0.5) * 14;
+    pos[i3 + 1] = (Math.random() - 0.5) * 9;
+    pos[i3 + 2] = (Math.random() - 0.5) * 7;
+
+    vel.push({
+      x: (Math.random() - 0.5) * 0.005,
+      y:  Math.random() * 0.007 + 0.0015,
+      z: (Math.random() - 0.5) * 0.003,
+    });
+
+    const r  = Math.random();
+    const c  = r < 0.38 ? C_KIM : r < 0.76 ? C_PARK : C_MIX;
+    col[i3]     = c.r;
+    col[i3 + 1] = c.g;
+    col[i3 + 2] = c.b;
+  }
+
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  pGeo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+
+  scene.add(new THREE.Points(pGeo, new THREE.PointsMaterial({
+    size: 0.048, vertexColors: true,
+    transparent: true, opacity: 0.72,
+    sizeAttenuation: true, depthWrite: false,
+  })));
+
+  /* ── CENTRAL GEOMETRY ──────────────────────────────── */
+  // Outer torus knot — warm purple wireframe
+  const tkA = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(1.05, 0.33, 140, 16),
+    new THREE.MeshBasicMaterial({ color: 0xc084fc, wireframe: true, transparent: true, opacity: 0.2 })
+  );
+  scene.add(tkA);
+
+  // Inner torus knot — cool cyan, counter-rotating
+  const tkB = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(0.72, 0.22, 90, 12),
+    new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.15 })
+  );
+  scene.add(tkB);
+
+  // Outer icosahedron shell — accent purple, very faint
+  const icoA = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(2.1, 1),
+    new THREE.MeshBasicMaterial({ color: 0xa78bfa, wireframe: true, transparent: true, opacity: 0.05 })
+  );
+  scene.add(icoA);
+
+  /* ── MOUSE PARALLAX ────────────────────────────────── */
+  let tgtX = 0, tgtY = 0, camX = 0, camY = 0;
+  window.addEventListener('mousemove', e => {
+    tgtX = (e.clientX / window.innerWidth  - 0.5) * 3.5;
+    tgtY = (e.clientY / window.innerHeight - 0.5) * 2.5;
+  }, { passive: true });
+
+  /* ── TOUCH PARALLAX ────────────────────────────────── */
+  window.addEventListener('touchmove', e => {
+    if (!e.touches[0]) return;
+    tgtX = (e.touches[0].clientX / window.innerWidth  - 0.5) * 2;
+    tgtY = (e.touches[0].clientY / window.innerHeight - 0.5) * 1.5;
+  }, { passive: true });
+
+  /* ── ANIMATION ─────────────────────────────────────── */
+  let raf, t = 0;
+
+  function animate() {
+    raf = requestAnimationFrame(animate);
+    t  += 0.007;
+
+    // Rotate central shapes
+    tkA.rotation.x =  t * 0.22;
+    tkA.rotation.y =  t * 0.31;
+    tkB.rotation.x = -t * 0.18;
+    tkB.rotation.y =  t * 0.28;
+    icoA.rotation.x = t * 0.05;
+    icoA.rotation.y = t * 0.08;
+
+    // Smooth camera parallax
+    camX += (tgtX - camX) * 0.025;
+    camY += (-tgtY - camY) * 0.025;
+    camera.position.x = camX;
+    camera.position.y = camY;
+    camera.lookAt(0, 0, 0);
+
+    // Move particles
+    const p = pGeo.attributes.position.array;
+    for (let i = 0; i < COUNT; i++) {
+      const i3 = i * 3;
+      p[i3]     += vel[i].x;
+      p[i3 + 1] += vel[i].y;
+      p[i3 + 2] += vel[i].z;
+      if (p[i3 + 1] >  4.5) { p[i3 + 1] = -4.5; p[i3] = (Math.random() - 0.5) * 14; }
+      if (p[i3]     >  7)   p[i3]     = -7;
+      if (p[i3]     < -7)   p[i3]     =  7;
+      if (p[i3 + 2] >  3.5) p[i3 + 2] = -3.5;
+      if (p[i3 + 2] < -3.5) p[i3 + 2] =  3.5;
     }
-    pts.forEach(p => { p.update(); p.draw(); });
-    raf = requestAnimationFrame(loop);
+    pGeo.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
   }
 
-  function init() {
-    resize();
-    pts = Array.from({ length: COUNT }, () => new Pt());
-    loop();
-  }
+  resize();
+  animate();
+  window.addEventListener('resize', resize, { passive: true });
 
-  window.addEventListener('resize', () => {
-    cancelAnimationFrame(raf);
-    resize();
-    loop();
-  });
-
-  // pause when hero not visible
-  const hero = document.getElementById('hero');
+  // Pause animation when hero scrolled out of view
   new IntersectionObserver(([e]) => {
-    if (e.isIntersecting) loop();
-    else cancelAnimationFrame(raf);
-  }).observe(hero);
+    if (e.isIntersecting) { if (!raf) animate(); }
+    else { cancelAnimationFrame(raf); raf = null; }
+  }).observe(document.getElementById('hero'));
+})();
 
-  init();
+/* ══════════════════════════════════════════════════════
+   3D CARD TILT — member cards & project items
+══════════════════════════════════════════════════════ */
+(function () {
+  function addTilt(selector, maxX, maxY) {
+    document.querySelectorAll(selector).forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width  - 0.5) * 2;
+        const y = ((e.clientY - r.top)  / r.height - 0.5) * 2;
+        el.style.transform  = `perspective(700px) rotateX(${-y * maxY}deg) rotateY(${x * maxX}deg) translateY(-4px)`;
+        el.style.transition = 'transform 0.06s linear';
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform  = '';
+        el.style.transition = 'transform 0.55s cubic-bezier(.4,0,.2,1), border-color .22s, box-shadow .22s';
+      });
+    });
+  }
+
+  addTilt('.member-card', 10, 8);
+  addTilt('.project-item:not(.project-upcoming)', 4, 3);
 })();
