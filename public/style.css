@@ -1035,3 +1035,115 @@ footer {
   pointer-events: none;
 }
 #about { position: relative; overflow: hidden; }
+
+/* ══════════════════════════════════════════════════════
+   TECH STACK MARQUEE
+══════════════════════════════════════════════════════ */
+#stack {
+  padding: 6rem 0 7rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
+  z-index: 1;
+}
+
+.stack-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+.stack-header .section-desc { margin: 0 auto; }
+
+/* Edge fade masks */
+.stack-fade {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 200px;
+  z-index: 2;
+  pointer-events: none;
+}
+.stack-fade-l { left:  0; background: linear-gradient(to right, var(--bg2), transparent); }
+.stack-fade-r { right: 0; background: linear-gradient(to left,  var(--bg2), transparent); }
+
+.stack-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.stack-track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-ltr 32s linear infinite;
+}
+.stack-track-rtl {
+  animation-name: marquee-rtl;
+  animation-duration: 40s;
+}
+
+@keyframes marquee-ltr {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes marquee-rtl {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* Pill */
+.stack-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .6rem 1.1rem .6rem .65rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: default;
+  user-select: none;
+  transition: border-color .2s ease, transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;
+}
+.stack-pill:hover {
+  border-color: var(--pill-color, var(--border2));
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(0,0,0,.4), 0 0 24px color-mix(in srgb, var(--pill-color, transparent) 18%, transparent);
+}
+
+.stack-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stack-icon img {
+  width: 17px; height: 17px;
+  display: block;
+}
+
+.stack-name {
+  font-size: .78rem;
+  font-family: var(--mono);
+  color: var(--text2);
+  font-weight: 500;
+  letter-spacing: -.01em;
+}
+
+/* ── 3D card reveal ─────────────────────────────────── */
+.member-card.reveal {
+  transform: perspective(900px) rotateY(-20deg) translateY(32px);
+}
+.member-card.reveal-right {
+  transform: perspective(900px) rotateY(20deg) translateY(32px);
+}
+.member-card.reveal.visible,
+.member-card.reveal-right.visible {
+  transform: perspective(900px) rotateY(0deg) translateY(0);
+  transition: opacity .7s ease, transform .88s cubic-bezier(.34,1.56,.64,1);
+}

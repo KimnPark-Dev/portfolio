@@ -220,6 +220,27 @@ form?.querySelectorAll('input, textarea').forEach(f =>
   );
   scene.add(icoA);
 
+  /* ── LIGHTS (solid blend pass) ─────────────────────── */
+  const ambLight = new THREE.AmbientLight(0x1a1a2e, 2);
+  const ptLightK = new THREE.PointLight(0xc084fc, 0, 18);
+  ptLightK.position.set(3, 3, 5);
+  const ptLightP = new THREE.PointLight(0x38bdf8, 0, 18);
+  ptLightP.position.set(-3, -2, 4);
+  scene.add(ambLight, ptLightK, ptLightP);
+
+  /* ── SOLID BLEND MESHES (wireframe → solid on scroll) ── */
+  const solidMatA = new THREE.MeshPhongMaterial({
+    color: 0xc084fc, transparent: true, opacity: 0,
+    shininess: 110, emissive: 0xc084fc, emissiveIntensity: 0.13,
+  });
+  const solidMatB = new THREE.MeshPhongMaterial({
+    color: 0x38bdf8, transparent: true, opacity: 0,
+    shininess: 110, emissive: 0x38bdf8, emissiveIntensity: 0.13,
+  });
+  const tkA_solid = new THREE.Mesh(new THREE.TorusKnotGeometry(1.05, 0.33, 140, 16), solidMatA);
+  const tkB_solid = new THREE.Mesh(new THREE.TorusKnotGeometry(0.72, 0.22, 90, 12), solidMatB);
+  scene.add(tkA_solid, tkB_solid);
+
   /* ── MOUSE PARALLAX ────────────────────────────────── */
   let tgtX = 0, tgtY = 0, camX = 0, camY = 0;
   window.addEventListener('mousemove', e => {
@@ -237,6 +258,9 @@ form?.querySelectorAll('input, textarea').forEach(f =>
   /* ── ANIMATION ─────────────────────────────────────── */
   let raf, t = 0;
 
+  // Scroll blend state
+  let _scrollBlend = 0;
+
   // Flash state for card interaction
   let _flash = null;
   const _BASE_A = new THREE.Color(0xc084fc);
@@ -253,6 +277,22 @@ form?.querySelectorAll('input, textarea').forEach(f =>
     tkB.rotation.y =  t * 0.28;
     icoA.rotation.x = t * 0.05;
     icoA.rotation.y = t * 0.08;
+
+    // Sync solid mesh transforms with wireframe
+    tkA_solid.rotation.copy(tkA.rotation);
+    tkB_solid.rotation.copy(tkB.rotation);
+
+    // Scroll-driven wireframe → solid blend (Codrops-inspired)
+    if (!_flash) {
+      const sb = _scrollBlend;
+      tkA.material.opacity   = 0.2  * (1 - sb * 0.78);
+      tkB.material.opacity   = 0.15 * (1 - sb * 0.78);
+      icoA.material.opacity  = 0.05 * (1 - sb);
+      solidMatA.opacity      = sb * 0.80;
+      solidMatB.opacity      = sb * 0.68;
+      ptLightK.intensity     = sb * 2.8;
+      ptLightP.intensity     = sb * 2.2;
+    }
 
     // Smooth camera parallax
     camX += (tgtX - camX) * 0.025;
@@ -281,8 +321,8 @@ form?.querySelectorAll('input, textarea').forEach(f =>
       const elapsed = (Date.now() - _flash.startMs) / _flash.durationMs;
       if (elapsed >= 1) {
         _flash = null;
-        tkA.material.color.copy(_BASE_A); tkA.material.opacity = 0.2; tkA.scale.setScalar(1);
-        tkB.material.color.copy(_BASE_B); tkB.material.opacity = 0.15; tkB.scale.setScalar(1);
+        tkA.material.color.copy(_BASE_A); tkA.material.opacity = 0.2 * (1 - _scrollBlend * 0.78); tkA.scale.setScalar(1);
+        tkB.material.color.copy(_BASE_B); tkB.material.opacity = 0.15 * (1 - _scrollBlend * 0.78); tkB.scale.setScalar(1);
         icoA.scale.setScalar(1);
       } else {
         const pulse = Math.sin(elapsed * Math.PI);
@@ -302,6 +342,26 @@ form?.querySelectorAll('input, textarea').forEach(f =>
   resize();
   animate();
   window.addEventListener('resize', resize, { passive: true });
+
+  /* ── SCROLL BLEND + HERO PARALLAX ──────────────────── */
+  const _heroContent = document.querySelector('.hero-content');
+  const _heroHint    = document.querySelector('.hero-scroll-hint');
+
+  window.addEventListener('scroll', () => {
+    const y  = window.scrollY;
+    const vh = window.innerHeight;
+    const raw = Math.min(y / vh, 1);
+    // smoothstep for silky transition
+    _scrollBlend = raw * raw * (3 - 2 * raw);
+
+    if (_heroContent) {
+      _heroContent.style.transform = `translateY(${y * 0.22}px)`;
+      _heroContent.style.opacity   = String(Math.max(0, 1 - y / (vh * 0.65)));
+    }
+    if (_heroHint) {
+      _heroHint.style.opacity = String(Math.max(0, 1 - y / 220));
+    }
+  }, { passive: true });
 
   // Pause only when browser tab is hidden
   document.addEventListener('visibilitychange', () => {
@@ -504,4 +564,82 @@ form?.querySelectorAll('input, textarea').forEach(f =>
   closeBtn?.addEventListener('click', closeModal);
   modal?.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+})();
+
+/* ══════════════════════════════════════════════════════
+   TECH STACK — flowing marquee
+══════════════════════════════════════════════════════ */
+(function () {
+  const SI = 'https://cdn.simpleicons.org/';
+
+  const TRACK_A = [
+    { name: 'JavaScript', slug: 'javascript',    hex: 'F7DF1E', bg: 'rgba(247,223,30,.13)'  },
+    { name: 'Python',     slug: 'python',         hex: '3776AB', bg: 'rgba(55,118,171,.13)'  },
+    { name: 'Node.js',    slug: 'nodedotjs',      hex: '6cc24a', bg: 'rgba(108,194,74,.13)'  },
+    { name: 'FastAPI',    slug: 'fastapi',         hex: '05998b', bg: 'rgba(5,153,139,.13)'   },
+    { name: 'AWS',        slug: 'amazonaws',      hex: 'FF9900', bg: 'rgba(255,153,0,.13)'   },
+    { name: 'Docker',     slug: 'docker',          hex: '2496ED', bg: 'rgba(36,150,237,.13)'  },
+    { name: 'Git',        slug: 'git',             hex: 'F05032', bg: 'rgba(240,80,50,.13)'   },
+    { name: 'REST API',   slug: 'openapiinitiative', hex: '6BA539', bg: 'rgba(107,165,57,.13)'},
+  ];
+
+  const TRACK_B = [
+    { name: 'Java',          slug: 'java',            hex: 'ED8B00', bg: 'rgba(237,139,0,.13)'  },
+    { name: 'C / C++',       slug: 'cplusplus',      hex: '00599C', bg: 'rgba(0,89,156,.13)'   },
+    { name: 'Chrome Ext.',   slug: 'googlechrome',   hex: '4285F4', bg: 'rgba(66,133,244,.13)' },
+    { name: 'PostgreSQL',    slug: 'postgresql',     hex: '4169E1', bg: 'rgba(65,105,225,.13)' },
+    { name: 'Three.js',      slug: 'threedotjs',     hex: 'ffffff', bg: 'rgba(255,255,255,.07)'},
+    { name: 'GitHub',        slug: 'github',         hex: 'ffffff', bg: 'rgba(255,255,255,.07)'},
+    { name: 'LLM / AI',      slug: 'openai',         hex: '74aa9c', bg: 'rgba(116,170,156,.13)'},
+    { name: 'Algorithm',     slug: 'leetcode',       hex: 'FFA116', bg: 'rgba(255,161,22,.13)' },
+  ];
+
+  function makePill({ name, slug, hex, bg }) {
+    const pill = document.createElement('div');
+    pill.className = 'stack-pill';
+    pill.style.cssText = `--pill-color:#${hex};--pill-bg:${bg}`;
+
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'stack-icon';
+    iconDiv.style.background = bg;
+
+    const img = document.createElement('img');
+    img.src    = `${SI}${slug}/${hex}`;
+    img.width  = 18;
+    img.height = 18;
+    img.alt    = name;
+    img.loading = 'lazy';
+    // fallback: hide broken image, show background
+    img.onerror = () => {
+      img.style.display = 'none';
+      iconDiv.textContent = name.slice(0, 2).toUpperCase();
+      iconDiv.style.cssText += `;font-size:.6rem;font-weight:700;color:#${hex};font-family:var(--mono)`;
+    };
+
+    iconDiv.appendChild(img);
+    const span = document.createElement('span');
+    span.className   = 'stack-name';
+    span.textContent = name;
+
+    pill.appendChild(iconDiv);
+    pill.appendChild(span);
+    return pill;
+  }
+
+  function buildTrack(el, items) {
+    // Two copies for seamless infinite loop
+    [items, items].forEach(set => {
+      const frag = document.createDocumentFragment();
+      set.forEach(item => frag.appendChild(makePill(item)));
+      el.appendChild(frag);
+    });
+    // Pause on hover
+    el.addEventListener('mouseenter', () => el.style.animationPlayState = 'paused');
+    el.addEventListener('mouseleave', () => el.style.animationPlayState = 'running');
+  }
+
+  const ta = document.getElementById('track-a');
+  const tb = document.getElementById('track-b');
+  if (ta) buildTrack(ta, TRACK_A);
+  if (tb) buildTrack(tb, TRACK_B);
 })();
