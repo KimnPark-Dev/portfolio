@@ -309,10 +309,17 @@ form?.querySelectorAll('input, textarea').forEach(f =>
     else if (!raf) animate();
   });
 
-  // Expose flash API for card interaction
+  // Expose flash API + torus screen position for card interaction
   window.__heroScene = {
     flash(hexColor, durationMs = 2200) {
       _flash = { color: new THREE.Color(hexColor), startMs: Date.now(), durationMs };
+    },
+    getTorusScreenPos() {
+      const v = new THREE.Vector3(0, 0, 0).project(camera);
+      return {
+        x: (v.x * 0.5 + 0.5) * window.innerWidth,
+        y: (-v.y * 0.5 + 0.5) * window.innerHeight,
+      };
     },
   };
 })();
@@ -429,30 +436,68 @@ form?.querySelectorAll('input, textarea').forEach(f =>
     card.style.cursor = 'pointer';
 
     card.addEventListener('click', e => {
-      if (e.target.closest('a')) return; // don't intercept link clicks
+      if (e.target.closest('a')) return;
 
       const m    = MEMBERS[memberId];
       const rect = card.getBoundingClientRect();
-      const dx   = window.innerWidth  / 2 - (rect.left + rect.width  / 2);
-      const dy   = window.innerHeight / 2 - (rect.top  + rect.height / 2);
 
-      // Clone card, position it fixed, fly to center
+      // Get actual torus position on screen from Three.js camera projection
+      const tp = window.__heroScene?.getTorusScreenPos()
+               ?? { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+      // Full-screen perspective wrapper with vanishing point AT the torus
+      // As the card translateZ's into the screen, CSS perspective makes it
+      // visually converge toward tp — the real torus position.
+      const wrapper = document.createElement('div');
+      Object.assign(wrapper.style, {
+        position: 'fixed', inset: '0',
+        perspective: '480px',
+        perspectiveOrigin: `${tp.x}px ${tp.y}px`,
+        pointerEvents: 'none',
+        zIndex: '2000',
+      });
+      document.body.appendChild(wrapper);
+
       const clone = card.cloneNode(true);
       Object.assign(clone.style, {
-        position: 'fixed', top: rect.top + 'px', left: rect.left + 'px',
+        position: 'fixed',
+        top: rect.top + 'px', left: rect.left + 'px',
         width: rect.width + 'px', height: rect.height + 'px',
-        margin: '0', zIndex: '2000', pointerEvents: 'none',
-        transform: 'none', transition: 'none',
+        margin: '0', transform: 'none', transition: 'none',
+        transformOrigin: 'center', willChange: 'transform, opacity, filter',
       });
-      document.body.appendChild(clone);
-
-      const anim = clone.animate([
-        { transform: 'translate(0,0) scale(1) rotate(0deg)',          opacity: 1 },
-        { transform: `translate(${dx}px,${dy}px) scale(0.04) rotate(600deg)`, opacity: 0 },
-      ], { duration: 700, easing: 'cubic-bezier(0.55,0,1,0.45)', fill: 'forwards' });
+      wrapper.appendChild(clone);
 
       if (window.__heroScene) window.__heroScene.flash(m.color, 2400);
-      anim.onfinish = () => { clone.remove(); openModal(m); };
+
+      // Fly INTO the screen toward the torus vanishing point
+      clone.animate([
+        {
+          transform: 'translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
+          opacity: 1, filter: 'blur(0px)', offset: 0,
+        },
+        {
+          // Brief "pull" — torus reaches out
+          transform: 'translateZ(12px) rotateX(-4deg) rotateY(6deg) rotateZ(-2deg)',
+          opacity: 1, filter: 'blur(0px)', offset: 0.07,
+        },
+        {
+          transform: 'translateZ(-180px) rotateX(12deg) rotateY(-18deg) rotateZ(8deg)',
+          opacity: 0.85, filter: 'blur(1px)', offset: 0.3,
+        },
+        {
+          transform: 'translateZ(-620px) rotateX(35deg) rotateY(-55deg) rotateZ(22deg)',
+          opacity: 0.4, filter: 'blur(5px)', offset: 0.65,
+        },
+        {
+          transform: 'translateZ(-2200px) rotateX(80deg) rotateY(-120deg) rotateZ(55deg)',
+          opacity: 0, filter: 'blur(14px)', offset: 1,
+        },
+      ], {
+        duration: 980,
+        easing: 'cubic-bezier(0.25, 0, 0.85, 0.15)',
+        fill: 'forwards',
+      }).onfinish = () => { wrapper.remove(); openModal(m); };
     });
   });
 
