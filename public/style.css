@@ -204,11 +204,12 @@ body {
 }
 
 #hero-canvas {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
   z-index: 0;
-  width: 100% !important;
-  height: 100% !important;
+  pointer-events: none;
 }
 
 .hero-content {
@@ -353,9 +354,9 @@ body {
    SECTION COMMON
 ══════════════════════════════════════════════════════ */
 section { padding: 8rem 0; }
-#about   { background: var(--bg2); }
-#projects{ background: var(--bg); }
-#contact { background: var(--bg2); }
+#about   { background: rgba(13,13,20,.8); position: relative; z-index: 1; }
+#projects{ background: var(--bg);  position: relative; z-index: 1; }
+#contact { background: var(--bg2); position: relative; z-index: 1; }
 
 .section-label {
   font-size: .72rem;
@@ -862,6 +863,8 @@ section { padding: 8rem 0; }
 footer {
   padding: 2rem 0;
   border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
 }
 .footer-inner {
   display: flex;

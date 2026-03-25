@@ -152,8 +152,8 @@ form?.querySelectorAll('input, textarea').forEach(f =>
   camera.position.z = 7;
 
   function resize() {
-    const w = canvas.offsetWidth;
-    const h = canvas.offsetHeight || window.innerHeight;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -278,11 +278,11 @@ form?.querySelectorAll('input, textarea').forEach(f =>
   animate();
   window.addEventListener('resize', resize, { passive: true });
 
-  // Pause animation when hero scrolled out of view
-  new IntersectionObserver(([e]) => {
-    if (e.isIntersecting) { if (!raf) animate(); }
-    else { cancelAnimationFrame(raf); raf = null; }
-  }).observe(document.getElementById('hero'));
+  // Pause only when browser tab is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { cancelAnimationFrame(raf); raf = null; }
+    else if (!raf) animate();
+  });
 })();
 
 /* ══════════════════════════════════════════════════════
