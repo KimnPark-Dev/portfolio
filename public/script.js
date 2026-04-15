@@ -80,59 +80,6 @@ document.querySelectorAll('.project-item').forEach(el => {
   projObs.observe(el);
 });
 
-/* ── Contact form ─────────────────────────────────── */
-const form      = document.getElementById('contact-form');
-const submitBtn = document.getElementById('form-submit-btn');
-const success   = document.getElementById('form-success');
-const error     = document.getElementById('form-error');
-
-function validate(form) {
-  let ok = true;
-  form.querySelectorAll('[required]').forEach(f => {
-    const valid = f.value.trim() !== '';
-    f.classList.toggle('invalid', !valid);
-    if (!valid) ok = false;
-  });
-  const em = form.querySelector('input[type="email"]');
-  if (em?.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) {
-    em.classList.add('invalid');
-    ok = false;
-  }
-  return ok;
-}
-
-form?.addEventListener('submit', async e => {
-  e.preventDefault();
-  success.hidden = true;
-  error.hidden   = true;
-  if (!validate(form)) return;
-
-  const btnText = submitBtn.querySelector('.btn-text');
-  const btnLoad = submitBtn.querySelector('.btn-loading');
-  btnText.hidden    = true;
-  btnLoad.hidden    = false;
-  submitBtn.disabled = true;
-
-  try {
-    const res = await fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { Accept: 'application/json' }
-    });
-    if (res.ok) { success.hidden = false; form.reset(); }
-    else          error.hidden   = false;
-  } catch { error.hidden = false; }
-  finally {
-    btnText.hidden    = false;
-    btnLoad.hidden    = true;
-    submitBtn.disabled = false;
-  }
-});
-
-form?.querySelectorAll('input, textarea').forEach(f =>
-  f.addEventListener('input', () => f.classList.remove('invalid'))
-);
-
 /* ══════════════════════════════════════════════════════
    HERO — Three.js 3D scene
    Purple (Kim) + Cyan (Park) dual-color particles
