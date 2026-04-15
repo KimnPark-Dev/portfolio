@@ -406,6 +406,145 @@ form?.querySelectorAll('input, textarea').forEach(f =>
 
   addTilt('.member-card', 10, 8);
   addTilt('.project-item:not(.project-upcoming)', 4, 3);
+
+  /* Project architecture detail view */
+  (function () {
+    const PROJECTS = {
+      talktime: {
+        kicker: 'In Progress · Realtime Social',
+        title: 'TalkTime Architecture',
+        root: 'TalkTime',
+        summary: 'GPS 기반 허브 매칭, 2D Canvas 월드, socket.io 실시간 통신, 30초 1:1 대화와 인스타그램 교환 플로우로 구성됩니다.',
+        steps: ['입장', '허브 매칭', '실시간 월드', '대화 플로우', '교환/보호'],
+        cards: [
+          { step: 0, title: '닉네임·인스타 ID·GPS 입력', desc: '브라우저 Geolocation API로 현재 위치를 받고, 인스타그램 ID는 공개하지 않은 상태로 서버에만 보관합니다.' },
+          { step: 1, title: '직장 권역 기반 Room 배정', desc: '강남, 광화문, 여의도, 서초, 구로·가산 허브 중 가장 가까운 권역으로 사용자를 배치합니다.' },
+          { step: 2, title: 'Canvas 2D 월드와 socket.io 동기화', desc: '클라이언트는 이동 좌표를 전송하고 서버는 같은 방의 플레이어에게 위치와 채팅 상태를 브로드캐스트합니다.' },
+          { step: 3, title: '커피·담배 30초 스몰토크', desc: '근처 사용자에게 대화를 신청하고, 수락되면 30초 동안 1:1 채팅과 타이머 애니메이션을 표시합니다.' },
+          { step: 4, title: '양측 동의 후 인스타그램 공개', desc: '대화 종료 후 양쪽 모두 교환을 수락한 경우에만 채팅 메시지로 인스타그램 ID를 공개합니다.' },
+        ],
+        links: [
+          { label: 'Front GitHub', href: 'https://github.com/KimnPark-Dev/TalkTime_Front' },
+          { label: 'Back GitHub', href: 'https://github.com/KimnPark-Dev/TalkTime_Back' },
+        ],
+      },
+      algonotion: {
+        kicker: 'Released · Chrome Extension',
+        title: 'AlgoNotion Architecture',
+        root: 'AlgoNotion',
+        summary: 'BOJ와 SWEA 문제 풀이 흐름을 브라우저 확장에서 감지하고, 문제 메타데이터와 코드 기록을 Notion 데이터베이스로 저장합니다.',
+        steps: ['풀이 감지', '데이터 수집', '확장 백그라운드', '외부 API', 'Notion 저장'],
+        cards: [
+          { step: 0, title: 'BOJ·SWEA 제출 페이지 감지', desc: 'Content Script가 문제 페이지와 제출 결과 화면을 감지해 성공한 풀이 흐름을 추적합니다.' },
+          { step: 1, title: '코드·문제 메타데이터 추출', desc: '문제 번호, 제목, 언어, 제출 코드, 플랫폼 정보를 정리해 저장 가능한 payload로 만듭니다.' },
+          { step: 2, title: 'Manifest V3 Service Worker', desc: '확장 백그라운드에서 인증 정보와 저장 요청을 관리하고 Content Script와 메시지를 주고받습니다.' },
+          { step: 3, title: 'solved.ac·Notion API 연동', desc: 'solved.ac에서 BOJ 난이도 정보를 보강하고 Notion API 요청 형식에 맞춰 데이터를 변환합니다.' },
+          { step: 4, title: 'Notion Database 자동 정리', desc: '풀이 기록을 Notion 데이터베이스에 저장해 알고리즘 학습 로그로 바로 활용할 수 있게 합니다.' },
+        ],
+        links: [
+          { label: 'Chrome Web Store', href: 'https://chromewebstore.google.com/detail/algonotion/hoodfjhnhefgjaahepkpekeeobchfgfa' },
+          { label: 'GitHub', href: 'https://github.com/KimnPark-Dev/AlgoNotion_Extention/tree/main' },
+        ],
+      },
+      moveradar: {
+        kicker: 'Hackathon · Snowflake KR 2026',
+        title: 'MoveRadar Architecture',
+        root: 'MoveRadar',
+        summary: 'Snowflake Marketplace 데이터, Cortex Anomaly Detection, Cortex COMPLETE, Streamlit Native App을 연결해 이사 수요를 선행 탐지합니다.',
+        steps: ['데이터 소스', '전처리', '이상 탐지', '경보 통합', '대시보드'],
+        cards: [
+          { step: 0, title: 'Snowflake Marketplace 4개 데이터셋', desc: '아파트 시세, 전입인구, 통신 개통, 렌탈·카드소비 데이터를 서울 권역 기준으로 결합합니다.' },
+          { step: 1, title: '훈련·탐지 테이블 분리', desc: '시계열 신호별 train/detect 테이블을 분리해 leakage 없이 Cortex ML 모델을 학습합니다.' },
+          { step: 2, title: 'Cortex Anomaly Detection 4모델', desc: '시세, 전입인구, 통신 개통, 카드소비 각각의 이상치를 탐지해 percentile 기반 신호로 변환합니다.' },
+          { step: 3, title: 'REGION_ALERTS와 LLM 문구 생성', desc: '4개 신호를 가중합으로 통합하고 Cortex COMPLETE로 경보 유형별 마케팅 카피를 생성합니다.' },
+          { step: 4, title: 'Streamlit Native App', desc: '지도, 신호 트렌드, 마케팅 문구, 렌탈·통신 트렌드를 4탭 대시보드로 제공합니다.' },
+        ],
+        links: [
+          { label: 'GitHub', href: 'https://github.com/KimnPark-Dev/MoveRadar' },
+        ],
+      },
+    };
+
+    const detail = document.createElement('div');
+    detail.className = 'project-detail-view';
+    detail.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(detail);
+
+    function render(project, activeStep = 0) {
+      detail.innerHTML = `
+        <div class="project-detail-shell">
+          <button type="button" class="project-back-btn" id="project-back-btn">← back to Main</button>
+          <header class="project-detail-head">
+            <div class="project-detail-kicker">${project.kicker}</div>
+            <h1 class="project-detail-title">${project.title}</h1>
+            <p class="project-detail-summary">${project.summary}</p>
+          </header>
+          <div class="project-architecture">
+            <div class="arch-root">${project.root}</div>
+            <div class="arch-steps">
+              ${project.steps.map((step, index) => `
+                <button type="button" class="arch-step ${index === activeStep ? 'active' : 'dimmed'}" data-step="${index}">
+                  ${step}
+                </button>
+              `).join('')}
+            </div>
+            <div class="arch-cards">
+              ${project.cards.map(card => `
+                <article class="arch-card ${card.step === activeStep ? 'active' : 'dimmed'}" data-step="${card.step}">
+                  <h3>${card.title}</h3>
+                  <p>${card.desc}</p>
+                </article>
+              `).join('')}
+            </div>
+          </div>
+          <div class="arch-links">
+            ${project.links.map(link => `<a class="arch-link" href="${link.href}" target="_blank" rel="noopener">${link.label}</a>`).join('')}
+          </div>
+        </div>
+      `;
+
+      detail.querySelector('#project-back-btn')?.addEventListener('click', close);
+      detail.querySelectorAll('.arch-step').forEach(btn => {
+        btn.addEventListener('click', () => render(project, Number(btn.dataset.step)));
+      });
+    }
+
+    function open(projectId) {
+      const project = PROJECTS[projectId];
+      if (!project) return;
+      render(project, 0);
+      detail.classList.add('open');
+      detail.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      detail.scrollTop = 0;
+    }
+
+    function close() {
+      detail.classList.remove('open');
+      detail.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.project-item[data-project]').forEach(card => {
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', `${card.querySelector('.project-title')?.textContent || 'Project'} architecture`);
+
+      card.addEventListener('click', e => {
+        if (e.target.closest('a, button')) return;
+        open(card.dataset.project);
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        open(card.dataset.project);
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && detail.classList.contains('open')) close();
+    });
+  })();
 })();
 
 /* ══════════════════════════════════════════════════════
