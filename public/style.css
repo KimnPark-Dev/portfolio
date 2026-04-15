@@ -810,9 +810,15 @@ section { padding: 8rem 0; }
   max-width: 1120px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 190px minmax(260px, 300px) 1fr;
+  grid-template-columns: 190px minmax(260px, 300px) 44px 1fr;
   align-items: center;
   gap: 1.5rem;
+  --arch-step-count: 5;
+  --arch-step-height: 62px;
+  --arch-step-gap: .9rem;
+  --arch-card-height: 152px;
+  --arch-card-gap: 1.25rem;
+  --arch-glow: rgba(255,255,255,.95);
 }
 
 .arch-root,
@@ -841,6 +847,10 @@ section { padding: 8rem 0; }
   height: 2px;
   background: var(--p);
 }
+.project-architecture:has(.arch-step.active) .arch-root::after {
+  background: var(--arch-glow);
+  box-shadow: 0 0 12px rgba(255,255,255,.95), 0 0 26px rgba(56,189,248,.75);
+}
 
 .arch-steps {
   position: relative;
@@ -858,6 +868,17 @@ section { padding: 8rem 0; }
   width: 2px;
   background: rgba(56,189,248,.28);
 }
+.arch-steps::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(var(--arch-step-height) / 2);
+  width: 2px;
+  height: calc((var(--arch-step-height) + var(--arch-step-gap)) * var(--active-step));
+  background: var(--arch-glow);
+  box-shadow: 0 0 12px rgba(255,255,255,.95), 0 0 24px rgba(56,189,248,.75);
+  transition: height .24s ease;
+}
 
 .arch-step {
   min-height: 62px;
@@ -865,7 +886,26 @@ section { padding: 8rem 0; }
   color: var(--text2);
   font-weight: 800;
   cursor: pointer;
+  position: relative;
   transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease, opacity .2s ease;
+}
+.arch-step::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 1.25rem;
+  height: 2px;
+  background: rgba(56,189,248,.28);
+}
+.arch-step::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: calc(1.5rem + 44px);
+  height: 2px;
+  background: rgba(56,189,248,.18);
 }
 .arch-step.active {
   color: var(--bg);
@@ -873,27 +913,63 @@ section { padding: 8rem 0; }
   border-color: var(--p);
   box-shadow: 0 18px 45px rgba(56,189,248,.22);
 }
+.arch-step.active::before,
+.arch-step.active::after {
+  background: var(--arch-glow);
+  box-shadow: 0 0 12px rgba(255,255,255,.95), 0 0 24px rgba(56,189,248,.75);
+}
 .arch-step.dimmed { opacity: .4; filter: blur(.4px); }
 .arch-step:hover { transform: translateY(-2px); }
+
+.arch-card-lines {
+  position: relative;
+  align-self: stretch;
+  min-height: calc((var(--arch-card-height) * 2) + var(--arch-card-gap));
+}
+.arch-card-lines::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 1.2rem;
+  bottom: 1.2rem;
+  width: 4px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, var(--k), var(--p));
+}
+.arch-card-line {
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  height: 2px;
+  transform: translateX(-50%);
+  background: rgba(56,189,248,.22);
+}
+.arch-card-line[data-step="0"],
+.arch-card-line[data-step="1"] {
+  top: calc(var(--arch-card-height) / 2);
+}
+.arch-card-line[data-step="2"],
+.arch-card-line[data-step="3"] {
+  top: calc(var(--arch-card-height) + var(--arch-card-gap) + (var(--arch-card-height) / 2));
+}
+.arch-card-line[data-step="4"] {
+  top: calc((var(--arch-card-height) * 2) + var(--arch-card-gap) - 1rem);
+}
+.arch-card-line.active,
+.arch-card-lines:has(.arch-card-line.active)::before {
+  background: var(--arch-glow);
+  box-shadow: 0 0 12px rgba(255,255,255,.95), 0 0 24px rgba(56,189,248,.75);
+}
 
 .arch-cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(240px, 1fr));
   gap: 1.25rem;
   position: relative;
-  padding-left: 1.25rem;
-}
-.arch-cards::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 1.2rem;
-  bottom: 1.2rem;
-  width: 4px;
-  background: linear-gradient(180deg, var(--k), var(--p));
 }
 
 .arch-card {
+  min-height: var(--arch-card-height);
   border-radius: 8px;
   padding: 1.45rem 1.6rem;
   transition: opacity .2s ease, transform .2s ease, border-color .2s ease;
@@ -949,9 +1025,11 @@ section { padding: 8rem 0; }
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .arch-steps::before,
-  .arch-cards::before { display: none; }
+  .arch-steps::after,
+  .arch-step::before,
+  .arch-step::after,
+  .arch-card-lines { display: none; }
   .arch-cards {
-    padding-left: 0;
     grid-template-columns: 1fr;
   }
 }

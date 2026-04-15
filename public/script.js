@@ -426,7 +426,7 @@ document.querySelectorAll('.project-item').forEach(el => {
             <h1 class="project-detail-title">${project.title}</h1>
             <p class="project-detail-summary">${project.summary}</p>
           </header>
-          <div class="project-architecture">
+          <div class="project-architecture" style="--active-step:${activeStep}">
             <div class="arch-root">${project.root}</div>
             <div class="arch-steps">
               ${project.steps.map((step, index) => `
@@ -434,6 +434,9 @@ document.querySelectorAll('.project-item').forEach(el => {
                   ${step}
                 </button>
               `).join('')}
+            </div>
+            <div class="arch-card-lines">
+              ${project.cards.map(card => `<span class="arch-card-line ${card.step === activeStep ? 'active' : ''}" data-step="${card.step}"></span>`).join('')}
             </div>
             <div class="arch-cards">
               ${project.cards.map(card => `
