@@ -473,7 +473,7 @@ form?.querySelectorAll('input, textarea').forEach(f =>
     function render(project, activeStep = 0) {
       detail.innerHTML = `
         <div class="project-detail-shell">
-          <button type="button" class="project-back-btn" id="project-back-btn">← back to Main</button>
+          <button type="button" class="project-back-btn" id="project-back-btn">Close</button>
           <header class="project-detail-head">
             <div class="project-detail-kicker">${project.kicker}</div>
             <h1 class="project-detail-title">${project.title}</h1>
@@ -524,6 +524,10 @@ form?.querySelectorAll('input, textarea').forEach(f =>
       detail.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
     }
+
+    detail.addEventListener('click', e => {
+      if (e.target === detail) close();
+    });
 
     document.querySelectorAll('.project-item[data-project]').forEach(card => {
       card.tabIndex = 0;
